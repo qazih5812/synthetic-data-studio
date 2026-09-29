@@ -191,23 +191,6 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
           <span>Dashboard</span>
         </button>
 
-        <button
-          onClick={() => setScreen('documentation')}
-          className={cn(
-            'w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group',
-            screen === 'documentation'
-              ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30 font-medium'
-              : 'text-muted-foreground hover:bg-white/5 hover:text-white'
-          )}
-        >
-          {screen === 'documentation' && <span className="absolute left-0 top-2 bottom-2 w-0.5 bg-blue-500 rounded-r-full" />}
-          <BookOpen className="w-4 h-4 shrink-0 text-blue-400" />
-          <div className="text-left min-w-0">
-            <div className="font-medium text-white">Project Documentation</div>
-            <div className="text-[10px] text-blue-300/60 truncate">Architecture & Specifications</div>
-          </div>
-        </button>
-
         <div className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-widest px-3 pt-3 pb-1">Synthetic Data Generators</div>
 
         {navModes.map(({ id, label, icon: Icon, desc }) => {
