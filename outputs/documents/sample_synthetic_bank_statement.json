@@ -1,0 +1,262 @@
+{
+  "documentType": "Bank Statement",
+  "disclaimer": "SYNTHETIC DATA — FOR DEMONSTRATION ONLY",
+  "bank": "UBL",
+  "accountHolder": "Muhammad Ahmed Khan",
+  "accountNumber": "****4158",
+  "statementPeriod": {
+    "from": "2026-01-01",
+    "to": "2026-02-27"
+  },
+  "currency": "PKR",
+  "summary": {
+    "openingBalance": 80000,
+    "totalDebits": 90472,
+    "totalCredits": 233478,
+    "closingBalance": 223006,
+    "transactionCount": 30
+  },
+  "transactions": [
+    {
+      "date": "2025-12-31",
+      "description": "K-Electric",
+      "debit": 2566,
+      "credit": null,
+      "balance": 77434,
+      "reference": "REF813691"
+    },
+    {
+      "date": "2025-12-31",
+      "description": "HBL ATM",
+      "debit": 5149,
+      "credit": null,
+      "balance": 72285,
+      "reference": "REF348860"
+    },
+    {
+      "date": "2026-01-02",
+      "description": "Transfer / Credit - K-Electric",
+      "debit": null,
+      "credit": 44816,
+      "balance": 117101,
+      "reference": "REF967603"
+    },
+    {
+      "date": "2026-01-03",
+      "description": "Transfer / Credit - Careem",
+      "debit": null,
+      "credit": 26034,
+      "balance": 143135,
+      "reference": "REF929896"
+    },
+    {
+      "date": "2026-01-08",
+      "description": "Uber PK",
+      "debit": 6310,
+      "credit": null,
+      "balance": 136825,
+      "reference": "REF785071"
+    },
+    {
+      "date": "2026-01-09",
+      "description": "McDonald's PK",
+      "debit": 5971,
+      "credit": null,
+      "balance": 130854,
+      "reference": "REF922262"
+    },
+    {
+      "date": "2026-01-09",
+      "description": "Careem",
+      "debit": 1314,
+      "credit": null,
+      "balance": 129540,
+      "reference": "REF637042"
+    },
+    {
+      "date": "2026-01-15",
+      "description": "HBL ATM",
+      "debit": 2791,
+      "credit": null,
+      "balance": 126749,
+      "reference": "REF755279"
+    },
+    {
+      "date": "2026-01-17",
+      "description": "K-Electric",
+      "debit": 1992,
+      "credit": null,
+      "balance": 124757,
+      "reference": "REF552711"
+    },
+    {
+      "date": "2026-01-19",
+      "description": "Transfer / Credit - Imtiaz Super",
+      "debit": null,
+      "credit": 42438,
+      "balance": 167195,
+      "reference": "REF551634"
+    },
+    {
+      "date": "2026-01-22",
+      "description": "Transfer / Credit - PTCL",
+      "debit": null,
+      "credit": 45583,
+      "balance": 212778,
+      "reference": "REF527642"
+    },
+    {
+      "date": "2026-01-23",
+      "description": "PTCL",
+      "debit": 7996,
+      "credit": null,
+      "balance": 204782,
+      "reference": "REF614958"
+    },
+    {
+      "date": "2026-01-27",
+      "description": "Metro Cash & Carry",
+      "debit": 3629,
+      "credit": null,
+      "balance": 201153,
+      "reference": "REF619217"
+    },
+    {
+      "date": "2026-01-27",
+      "description": "Transfer / Credit - K-Electric",
+      "debit": null,
+      "credit": 35715,
+      "balance": 236868,
+      "reference": "REF631191"
+    },
+    {
+      "date": "2026-01-27",
+      "description": "Daraz.pk",
+      "debit": 6581,
+      "credit": null,
+      "balance": 230287,
+      "reference": "REF170155"
+    },
+    {
+      "date": "2026-01-31",
+      "description": "Transfer / Credit - Daraz.pk",
+      "debit": null,
+      "credit": 26342,
+      "balance": 256629,
+      "reference": "REF177361"
+    },
+    {
+      "date": "2026-01-31",
+      "description": "McDonald's PK",
+      "debit": 918,
+      "credit": null,
+      "balance": 255711,
+      "reference": "REF345735"
+    },
+    {
+      "date": "2026-02-03",
+      "description": "HBL ATM",
+      "debit": 1909,
+      "credit": null,
+      "balance": 253802,
+      "reference": "REF391425"
+    },
+    {
+      "date": "2026-02-03",
+      "description": "K-Electric",
+      "debit": 5927,
+      "credit": null,
+      "balance": 247875,
+      "reference": "REF227096"
+    },
+    {
+      "date": "2026-02-05",
+      "description": "Transfer / Credit - Uber PK",
+      "debit": null,
+      "credit": 12550,
+      "balance": 260425,
+      "reference": "REF745616"
+    },
+    {
+      "date": "2026-02-09",
+      "description": "K-Electric",
+      "debit": 4653,
+      "credit": null,
+      "balance": 255772,
+      "reference": "REF682834"
+    },
+    {
+      "date": "2026-02-10",
+      "description": "Metro Cash & Carry",
+      "debit": 2700,
+      "credit": null,
+      "balance": 253072,
+      "reference": "REF952919"
+    },
+    {
+      "date": "2026-02-12",
+      "description": "Imtiaz Super",
+      "debit": 1542,
+      "credit": null,
+      "balance": 251530,
+      "reference": "REF744269"
+    },
+    {
+      "date": "2026-02-14",
+      "description": "Foodpanda",
+      "debit": 1022,
+      "credit": null,
+      "balance": 250508,
+      "reference": "REF889308"
+    },
+    {
+      "date": "2026-02-16",
+      "description": "Foodpanda",
+      "debit": 3192,
+      "credit": null,
+      "balance": 247316,
+      "reference": "REF509729"
+    },
+    {
+      "date": "2026-02-18",
+      "description": "K-Electric",
+      "debit": 7866,
+      "credit": null,
+      "balance": 239450,
+      "reference": "REF239603"
+    },
+    {
+      "date": "2026-02-22",
+      "description": "Careem",
+      "debit": 1775,
+      "credit": null,
+      "balance": 237675,
+      "reference": "REF993324"
+    },
+    {
+      "date": "2026-02-25",
+      "description": "Foodpanda",
+      "debit": 7129,
+      "credit": null,
+      "balance": 230546,
+      "reference": "REF316284"
+    },
+    {
+      "date": "2026-02-27",
+      "description": "Metro Cash & Carry",
+      "debit": 4376,
+      "credit": null,
+      "balance": 226170,
+      "reference": "REF567377"
+    },
+    {
+      "date": "2026-02-27",
+      "description": "Uber PK",
+      "debit": 3164,
+      "credit": null,
+      "balance": 223006,
+      "reference": "REF520125"
+    }
+  ],
+  "generatedAt": "2026-09-29T20:03:56.649Z"
+}

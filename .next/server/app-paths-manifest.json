@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/analyze/route": "app/api/analyze/route.js",
+  "/api/documentation/generate/route": "app/api/documentation/generate/route.js",
+  "/api/generate/bank-statement/route": "app/api/generate/bank-statement/route.js",
+  "/api/generate/document/route": "app/api/generate/document/route.js",
+  "/api/generate/invoice/route": "app/api/generate/invoice/route.js",
+  "/api/generate/relational/route": "app/api/generate/relational/route.js",
+  "/api/generate/tabular/route": "app/api/generate/tabular/route.js",
+  "/api/health/route": "app/api/health/route.js",
+  "/api/upload/route": "app/api/upload/route.js",
+  "/api/validate/route": "app/api/validate/route.js",
+  "/page": "app/page.js"
+}

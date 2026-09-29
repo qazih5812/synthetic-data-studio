@@ -1,0 +1,5 @@
+{
+  "/api/generate/relational/route": "app/api/generate/relational/route.js",
+  "/api/generate/tabular/route": "app/api/generate/tabular/route.js",
+  "/page": "app/page.js"
+}

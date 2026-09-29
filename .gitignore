@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.env
+.venv
+
+# Node / React
+node_modules/
+dist/
+build/
+.npm
+
+# HackDataV2 Specific
+generated_data/
+*.pdf
+*.csv
+*.db
+*.sqlite3
+
+# OS Files
+.DS_Store
+Thumbs.db

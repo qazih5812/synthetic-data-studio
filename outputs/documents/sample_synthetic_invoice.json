@@ -1,0 +1,57 @@
+{
+  "documentType": "Invoice",
+  "disclaimer": "SYNTHETIC DATA — FOR DEMONSTRATION ONLY",
+  "invoiceNumber": "INV-2026-8074",
+  "invoiceDate": "2026-09-29",
+  "dueDate": "2026-10-29",
+  "status": "UNPAID",
+  "currency": "PKR",
+  "currencySymbol": "Rs.",
+  "issuer": {
+    "name": "TechPk Solutions (Pvt.) Ltd.",
+    "address": "Plot 45, DHA Phase 5, Karachi, Pakistan",
+    "email": "billing@techpk.com.pk",
+    "phone": "+92-21-111-000-222",
+    "taxId": "NTN-3456789-2"
+  },
+  "client": {
+    "name": "Karachi Trading Co.",
+    "address": "Shop 12, Saddar Bazar, Karachi",
+    "email": "accounts@karachitrade.pk",
+    "phone": "N/A"
+  },
+  "lineItems": [
+    {
+      "lineNumber": 1,
+      "description": "Security Audit",
+      "quantity": 5,
+      "unitPrice": 19075,
+      "lineTotal": 95375
+    },
+    {
+      "lineNumber": 2,
+      "description": "Technical Consultation (hr)",
+      "quantity": 5,
+      "unitPrice": 5850,
+      "lineTotal": 29250
+    },
+    {
+      "lineNumber": 3,
+      "description": "UI/UX Design Package",
+      "quantity": 5,
+      "unitPrice": 8160,
+      "lineTotal": 40800
+    }
+  ],
+  "summary": {
+    "subtotal": 165425,
+    "taxLabel": "GST (17%)",
+    "taxRate": 17,
+    "taxAmount": 28122.25,
+    "total": 193547.25,
+    "_verified": true
+  },
+  "paymentTerms": "30 days net",
+  "notes": "Please make payment via bank transfer. NTN required for all transactions above Rs. 50,000.",
+  "generatedAt": "2026-09-29T20:03:56.724Z"
+}
