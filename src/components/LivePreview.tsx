@@ -54,7 +54,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
         <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center">
           <AlertCircle className="w-8 h-8" />
         </div>
-        <h3 className="text-xl font-semibold text-white">Generation Failed</h3>
+        <h3 className="text-xl font-semibold text-foreground dark:text-white">Generation Failed</h3>
         <p className="text-sm text-center max-w-md bg-black/40 p-4 rounded-lg border border-red-500/20 leading-relaxed">
           {error}
         </p>
@@ -94,7 +94,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
     return (
       <div className="overflow-auto border border-white/10 rounded-xl bg-black/40 backdrop-blur-md shadow-2xl h-full">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs uppercase bg-white/5 sticky top-0 z-10 backdrop-blur-xl border-b border-white/10">
+          <thead className="text-xs uppercase bg-black/5 dark:bg-white/5 sticky top-0 z-10 backdrop-blur-xl border-b border-white/10">
             <tr>
               <th className="px-4 py-4 font-semibold text-muted-foreground/60 w-12">#</th>
               {headers.map((h) => (
@@ -105,7 +105,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
           <tbody className="divide-y divide-white/5">
             {data.map((row: any, i: number) => (
               // FIX: Use JSON.stringify of first few fields for a more stable key than index alone
-              <tr key={`row-${i}`} className="hover:bg-white/[0.02] transition-colors">
+              <tr key={`row-${i}`} className="hover:bg-black/5 dark:bg-white/[0.02] transition-colors">
                 <td className="px-4 py-3 text-muted-foreground/40 text-xs">{i + 1}</td>
                 {headers.map((h) => (
                   <td key={h} className="px-6 py-3 whitespace-nowrap">
@@ -139,21 +139,21 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
             <div key={tableName} className="space-y-3">
               <div className="flex items-center space-x-3">
                 <h3 className="text-lg font-semibold text-primary">{tableName}</h3>
-                <span className="text-xs text-muted-foreground bg-white/5 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-muted-foreground bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded-full">
                   {rows.length} rows
                 </span>
               </div>
               {rows.length > 0 ? (
                 <div className="overflow-x-auto border border-white/10 rounded-xl bg-black/40">
                   <table className="w-full text-sm text-left">
-                    <thead className="text-xs uppercase bg-white/5 text-muted-foreground border-b border-white/10">
+                    <thead className="text-xs uppercase bg-black/5 dark:bg-white/5 text-muted-foreground border-b border-white/10">
                       <tr>
                         {cols.map(h => <th key={h} className="px-4 py-3 whitespace-nowrap">{h}</th>)}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                       {rows.map((row: any, i: number) => (
-                        <tr key={`${tableName}-row-${i}`} className="hover:bg-white/[0.02] transition-colors">
+                        <tr key={`${tableName}-row-${i}`} className="hover:bg-black/5 dark:bg-white/[0.02] transition-colors">
                           {cols.map(h => (
                             <td key={h} className="px-4 py-3 whitespace-nowrap">
                               {renderCellValue(row[h])}
@@ -195,7 +195,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
       );
     }
     return (
-      <div className="h-full overflow-auto bg-white/5 text-foreground p-8 rounded-xl shadow-2xl">
+      <div className="h-full overflow-auto bg-black/5 dark:bg-white/5 text-foreground p-8 rounded-xl shadow-2xl">
         <pre className="whitespace-pre-wrap font-mono text-sm">
           {JSON.stringify(data, null, 2)}
         </pre>
@@ -209,13 +209,13 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
         <div className="flex space-x-1">
           <button 
             onClick={() => setActiveTab('preview')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'preview' ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'preview' ? 'bg-black/5 dark:bg-white/10 text-foreground dark:text-white' : 'text-muted-foreground hover:text-foreground dark:text-white hover:bg-black/5 dark:bg-white/5'}`}
           >
             Visual Preview
           </button>
           <button 
             onClick={() => setActiveTab('raw')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors ${activeTab === 'raw' ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white hover:bg-white/5'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors ${activeTab === 'raw' ? 'bg-black/5 dark:bg-white/10 text-foreground dark:text-white' : 'text-muted-foreground hover:text-foreground dark:text-white hover:bg-black/5 dark:bg-white/5'}`}
           >
             <FileJson className="w-4 h-4" />
             <span>Raw JSON</span>
@@ -226,7 +226,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
           {mode !== 'document' && (
             <button 
               onClick={() => handleExport('csv')} 
-              className="flex items-center space-x-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors"
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>CSV</span>
@@ -234,7 +234,7 @@ export default function LivePreview({ data, loading, error, mode }: LivePreviewP
           )}
           <button 
             onClick={() => handleExport('json')} 
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/5 dark:bg-white/10 border border-white/10 rounded-lg text-xs transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             <span>JSON</span>

@@ -1,0 +1,8 @@
+{
+  "/api/generate/bank-statement/route": "app/api/generate/bank-statement/route.js",
+  "/api/generate/document/route": "app/api/generate/document/route.js",
+  "/api/generate/invoice/route": "app/api/generate/invoice/route.js",
+  "/api/generate/relational/route": "app/api/generate/relational/route.js",
+  "/api/generate/tabular/route": "app/api/generate/tabular/route.js",
+  "/page": "app/page.js"
+}

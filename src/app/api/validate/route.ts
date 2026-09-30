@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { validateTabularData, validateRelationalData, type FieldSchema } from '@/lib/deterministic-generator';
+import { validateTabularData, validateRelationalData, validateDocumentData, type FieldSchema } from '@/lib/deterministic-generator';
 
 export async function POST(req: Request) {
   try {
@@ -13,6 +13,8 @@ export async function POST(req: Request) {
 
     if (mode === 'relational' && typeof data === 'object' && !Array.isArray(data)) {
       result = validateRelationalData(data, fkMap || {});
+    } else if (mode === 'document' || mode === 'invoice' || mode === 'bank-statement') {
+      result = validateDocumentData(data, mode);
     } else {
       const fieldSchemas: FieldSchema[] = (schema?.fields || []).map((f: any) => ({
         name: f.name,

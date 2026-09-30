@@ -5,9 +5,10 @@ import {
   Upload, Settings2, BarChart3, Home, ChevronRight,
   AlertCircle, CheckCircle2, XCircle, Clock,
   Download, RefreshCw, Zap, Shield, Activity,
-  BookOpen, Check, Copy, ExternalLink
+  BookOpen, Check, Copy, ExternalLink, LogOut, Server
 } from 'lucide-react';
 import { cn } from './Sidebar';
+import { ThemeToggle } from './ThemeToggle';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -36,7 +37,7 @@ interface GenerationRecord {
 
 // ─── Main App ────────────────────────────────────────────────────────────────
 
-export default function App() {
+export default function App({ onLogout }: { onLogout?: () => void }) {
   const [state, setState] = useState<AppState>({
     screen: 'dashboard',
     mode: 'tabular',
@@ -112,7 +113,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background font-sans">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-background font-sans">
       {/* Sidebar */}
       <AppSidebar
         activeMode={state.mode}
@@ -124,7 +125,7 @@ export default function App() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <TopBar screen={state.screen} mode={state.mode} loading={state.loading} />
+        <TopBar screen={state.screen} mode={state.mode} loading={state.loading} onLogout={onLogout} />
 
         <div className="flex-1 overflow-hidden flex">
           {state.screen === 'dashboard' ? (
@@ -160,12 +161,12 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
   ];
 
   return (
-    <aside className="w-64 border-r border-white/10 bg-black/50 backdrop-blur-xl flex flex-col z-20 shrink-0">
+    <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/50 backdrop-blur-xl flex flex-col z-20 shrink-0 max-h-[35vh] md:max-h-screen">
       {/* Logo */}
-      <div className="p-5 border-b border-white/10">
+      <div className="p-5 border-b border-black/10 dark:border-white/10">
         <div className="flex items-center space-x-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-            <Zap className="w-5 h-5 text-white" />
+            <Zap className="w-5 h-5 text-foreground dark:text-white" />
           </div>
           <div>
             <div className="font-bold text-sm tracking-tight">HackDataV2</div>
@@ -183,8 +184,8 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
           className={cn(
             'w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm transition-all',
             screen === 'dashboard'
-              ? 'bg-white/10 text-white font-medium'
-              : 'text-muted-foreground hover:bg-white/5 hover:text-white'
+              ? 'bg-black/10 dark:bg-white/10 text-foreground dark:text-white font-medium'
+              : 'text-muted-foreground hover:bg-black/5 dark:bg-white/5 hover:text-foreground dark:text-white'
           )}
         >
           <Home className="w-4 h-4" />
@@ -201,7 +202,7 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
               onClick={() => { setMode(id); setScreen('generate'); }}
               className={cn(
                 'w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group',
-                isActive ? 'bg-primary/15 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-white'
+                isActive ? 'bg-primary/15 text-primary' : 'text-muted-foreground hover:bg-black/5 dark:bg-white/5 hover:text-foreground dark:text-white'
               )}
             >
               {isActive && <span className="absolute left-0 top-2 bottom-2 w-0.5 bg-primary rounded-r-full" />}
@@ -235,8 +236,8 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
       </nav>
 
       {/* API Status */}
-      <div className="p-3 border-t border-white/10">
-        <div className="bg-white/5 rounded-xl p-3 text-xs">
+      <div className="p-3 border-t border-black/10 dark:border-white/10">
+        <div className="bg-black/5 dark:bg-white/5 rounded-xl p-3 text-xs">
           <div className="flex items-center justify-between mb-1">
             <span className="text-muted-foreground">API Status</span>
             <span className="flex items-center text-green-400 text-[10px]">
@@ -253,13 +254,13 @@ function AppSidebar({ activeMode, screen, setMode, setScreen, history }: any) {
 
 // ─── Top Bar ─────────────────────────────────────────────────────────────────
 
-function TopBar({ screen, mode, loading }: any) {
+function TopBar({ screen, mode, loading, onLogout }: any) {
   return (
-    <header className="h-14 flex items-center justify-between px-6 border-b border-white/10 bg-black/30 backdrop-blur-sm shrink-0">
+    <header className="h-14 flex items-center justify-between px-6 border-b border-black/10 dark:border-white/10 bg-white/60 dark:bg-black/30 backdrop-blur-sm shrink-0">
       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
         <span>HackDataV2</span>
         <ChevronRight className="w-3 h-3" />
-        <span className="text-white capitalize">
+        <span className="text-foreground dark:text-white capitalize">
           {screen === 'dashboard' ? 'Dashboard' : screen === 'documentation' ? 'Project Technical Documentation' : MODE_LABELS[mode as Mode]}
         </span>
       </div>
@@ -273,10 +274,20 @@ function TopBar({ screen, mode, loading }: any) {
         <a
           href="/api/health"
           target="_blank"
-          className="text-xs text-muted-foreground hover:text-white transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground dark:text-white transition-colors"
         >
           API Docs
         </a>
+        <ThemeToggle />
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 text-xs text-muted-foreground hover:text-foreground dark:text-white transition-all border border-black/5 dark:border-white/5"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Logout</span>
+          </button>
+        )}
       </div>
     </header>
   );
@@ -306,7 +317,7 @@ function Dashboard({ history, onNavigate }: { history: GenerationRecord[]; onNav
           { label: 'Avg Quality Score', value: avgScore !== null ? `${avgScore}%` : '—', icon: Shield, color: 'text-green-400' },
           { label: 'Models Available', value: 4, icon: Zap, color: 'text-yellow-400' },
         ].map(stat => (
-          <div key={stat.label} className="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div key={stat.label} className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground">{stat.label}</span>
               <stat.icon className={cn('w-4 h-4', stat.color)} />
@@ -341,13 +352,13 @@ function Dashboard({ history, onNavigate }: { history: GenerationRecord[]; onNav
       <div>
         <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Generation History</h2>
         {history.length === 0 ? (
-          <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center text-muted-foreground text-sm">
+          <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-8 text-center text-muted-foreground text-sm">
             No generations yet. Pick a generator above to start.
           </div>
         ) : (
           <div className="space-y-2">
             {history.map(h => (
-              <div key={h.id} className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between">
+              <div key={h.id} className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Database className="w-4 h-4 text-muted-foreground" />
                   <div>
@@ -441,7 +452,7 @@ function DocumentationScreen() {
             </span>
             <span className="text-xs text-muted-foreground">v2.0.0</span>
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">HackDataV2 Technical Project Documentation</h1>
+          <h1 className="text-xl font-bold text-foreground dark:text-white tracking-tight">HackDataV2 Technical Project Documentation</h1>
           <p className="text-xs text-muted-foreground mt-1 max-w-2xl">
             Comprehensive system architecture, deterministic generation pipeline, topological relational schema engine, and verified competition requirements audit.
           </p>
@@ -451,7 +462,7 @@ function DocumentationScreen() {
         <div className="flex items-center space-x-2 shrink-0">
           <button
             onClick={handleDownloadPdf}
-            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25 transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-foreground dark:text-white shadow-lg shadow-blue-500/25 transition-all cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download Technical PDF</span>
@@ -460,7 +471,7 @@ function DocumentationScreen() {
           <button
             onClick={handleRegenerate}
             disabled={regenerating}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 text-foreground dark:text-white transition-all cursor-pointer"
           >
             <RefreshCw className={cn('w-3.5 h-3.5', regenerating && 'animate-spin')} />
             <span>{regenerating ? 'Regenerating...' : 'Refresh'}</span>
@@ -468,7 +479,7 @@ function DocumentationScreen() {
 
           <button
             onClick={handleCopyMarkdown}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 text-foreground dark:text-white transition-all cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copied' : 'Copy MD'}</span>
@@ -477,7 +488,7 @@ function DocumentationScreen() {
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-2 border-b border-white/10 pb-2">
+      <div className="flex space-x-2 border-b border-black/10 dark:border-white/10 pb-2">
         {[
           { id: 'overview', label: 'Architecture & Pipeline' },
           { id: 'requirements', label: 'Competition Requirements Matrix' },
@@ -488,7 +499,7 @@ function DocumentationScreen() {
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
               'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer',
-              activeTab === tab.id ? 'bg-blue-600/20 text-blue-300 border border-blue-500/30' : 'text-muted-foreground hover:text-white'
+              activeTab === tab.id ? 'bg-blue-600/20 text-blue-300 border border-blue-500/30' : 'text-muted-foreground hover:text-foreground dark:text-white'
             )}
           >
             {tab.label}
@@ -500,30 +511,30 @@ function DocumentationScreen() {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4">
               <div className="text-[11px] text-muted-foreground">Framework & Runtime</div>
-              <div className="text-base font-bold text-white mt-1">Next.js 16 + Node.js</div>
+              <div className="text-base font-bold text-foreground dark:text-white mt-1">Next.js 16 + Node.js</div>
               <div className="text-[10px] text-muted-foreground/60 mt-0.5">Turbopack · React 19 · TypeScript 5.8</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4">
               <div className="text-[11px] text-muted-foreground">Generation Paradigm</div>
-              <div className="text-base font-bold text-white mt-1">Hybrid Deterministic</div>
+              <div className="text-base font-bold text-foreground dark:text-white mt-1">Hybrid Deterministic</div>
               <div className="text-[10px] text-muted-foreground/60 mt-0.5">Zero LLM cost per row · Seedable PRNG</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4">
               <div className="text-[11px] text-muted-foreground">Relational Model</div>
-              <div className="text-base font-bold text-white mt-1">Topological Integrity</div>
+              <div className="text-base font-bold text-foreground dark:text-white mt-1">Topological Integrity</div>
               <div className="text-[10px] text-muted-foreground/60 mt-0.5">Zero orphan foreign keys guaranteed</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4">
               <div className="text-[11px] text-muted-foreground">AI Intelligence</div>
-              <div className="text-base font-bold text-white mt-1">Gemini 3.8 Flash</div>
+              <div className="text-base font-bold text-foreground dark:text-white mt-1">Gemini 3.8 Flash</div>
               <div className="text-[10px] text-muted-foreground/60 mt-0.5">4-Model Cascade + Resilient Offline Engine</div>
             </div>
           </div>
 
           {/* Architecture Pipeline Box */}
-          <div className="bg-black/40 border border-white/10 rounded-xl p-5 space-y-3 font-mono text-xs">
+          <div className="bg-white/70 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl p-5 space-y-3 font-mono text-xs">
             <div className="text-sm font-bold text-primary font-sans">End-to-End Generation & Verification Pipeline</div>
             <div className="p-4 bg-black/60 rounded-lg text-emerald-400 overflow-x-auto whitespace-pre leading-relaxed">
 {`User Intent
@@ -554,16 +565,16 @@ Multi-Format Export
 
       {/* Tab 2: Requirements Matrix */}
       {activeTab === 'requirements' && (
-        <div className="bg-black/40 border border-white/10 rounded-xl p-5 space-y-4">
+        <div className="bg-white/70 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white">Competition Requirements Completion Matrix</h3>
+            <h3 className="text-sm font-bold text-foreground dark:text-white">Competition Requirements Completion Matrix</h3>
             <span className="text-xs text-green-400 font-semibold bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full">
               24 / 24 Requirements Complete
             </span>
           </div>
-          <div className="overflow-x-auto rounded-lg border border-white/10">
+          <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
             <table className="w-full text-xs">
-              <thead className="bg-white/5 border-b border-white/10 text-left text-muted-foreground">
+              <thead className="bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10 text-left text-muted-foreground">
                 <tr>
                   <th className="p-3">Requirement</th>
                   <th className="p-3">Verified Implementation</th>
@@ -571,7 +582,7 @@ Multi-Format Export
                   <th className="p-3">Priority</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-black/5 dark:divide-white/5">
                 {[
                   { req: 'Project Setup', impl: 'Next.js 16.3.7, Tailwind CSS v4, Lucide React, TypeScript 5.8', pri: 'P1' },
                   { req: 'CSV Upload & Schema Inference', impl: 'POST /api/upload parses CSV, detects PKs, types, and sample data', pri: 'P1' },
@@ -592,7 +603,7 @@ Multi-Format Export
                   { req: 'Technical Project Docs', impl: 'Dedicated TechnicalDocumentationService + PDF export at /api/documentation/generate', pri: 'P1' },
                 ].map((row, i) => (
                   <tr key={i} className="hover:bg-white/[0.02]">
-                    <td className="p-3 font-medium text-white">{row.req}</td>
+                    <td className="p-3 font-medium text-foreground dark:text-white">{row.req}</td>
                     <td className="p-3 text-muted-foreground">{row.impl}</td>
                     <td className="p-3"><span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">COMPLETE</span></td>
                     <td className="p-3 text-muted-foreground/60">{row.pri}</td>
@@ -606,8 +617,8 @@ Multi-Format Export
 
       {/* Tab 3: Full Markdown Viewer */}
       {activeTab === 'markdown' && (
-        <div className="bg-black/50 border border-white/10 rounded-xl p-5">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+        <div className="bg-white/80 dark:bg-black/50 border border-black/10 dark:border-white/10 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-black/10 dark:border-white/10">
             <span className="text-xs text-muted-foreground">Rendered from docs/HackDataV2_Technical_Documentation.md</span>
             <button
               onClick={handleCopyMarkdown}
@@ -630,7 +641,7 @@ Multi-Format Export
 
 function GenerateScreen({ state, update, setMode, onGenerate }: any) {
   return (
-    <div className="flex-1 flex overflow-hidden">
+    <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
       {/* Config panel */}
       <ConfigSidebar
         mode={state.mode}
@@ -677,8 +688,8 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
   const isRelational = mode === 'relational';
 
   return (
-    <aside className="w-72 border-r border-white/10 bg-black/40 flex flex-col shrink-0">
-      <div className="p-5 border-b border-white/10">
+    <aside className="w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-black/10 dark:border-white/10 bg-white/70 dark:bg-black/40 flex flex-col shrink-0 max-h-[40vh] lg:max-h-screen">
+      <div className="p-5 border-b border-black/10 dark:border-white/10 shrink-0">
         <div className="flex items-center space-x-2">
           <Settings2 className="w-4 h-4 text-muted-foreground" />
           <h2 className="font-semibold text-sm">Configuration</h2>
@@ -694,12 +705,13 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
             value={config.locale || 'en-US'}
             onChange={e => set('locale', e.target.value)}
           >
-            <option value="en-US">🇺🇸 English (US)</option>
-            <option value="en-GB">🇬🇧 English (UK)</option>
-            <option value="pk">🇵🇰 Pakistani (PKR)</option>
-            <option value="fr-FR">🇫🇷 French</option>
-            <option value="de-DE">🇩🇪 German</option>
-            <option value="es-ES">🇪🇸 Spanish</option>
+            <option className="bg-background text-foreground" value="en-US">🇺🇸 English (US)</option>
+            <option className="bg-background text-foreground" value="en-GB">🇬🇧 English (UK)</option>
+            <option className="bg-background text-foreground" value="pk">🇵🇰 Pakistani (PKR)</option>
+            <option className="bg-background text-foreground" value="ur">🇵🇰 Urdu (ur)</option>
+            <option className="bg-background text-foreground" value="fr-FR">🇫🇷 French</option>
+            <option className="bg-background text-foreground" value="de-DE">🇩🇪 German</option>
+            <option className="bg-background text-foreground" value="es-ES">🇪🇸 Spanish</option>
           </select>
         </Field>
 
@@ -713,6 +725,17 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
               onChange={e => set('rowCount', parseInt(e.target.value))}
             />
             <p className="text-[10px] text-muted-foreground mt-1">Max 200 rows for fast generation</p>
+          </Field>
+        )}
+
+        {/* Templates */}
+        {isTabular && (
+          <Field label="Quick Templates">
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => set('schema', 'id:id, patientName:name, dob:date, diagnosis:string, bloodType:string')} className="px-2 py-1 text-[10px] bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 rounded border border-blue-500/20 transition-colors">Healthcare</button>
+              <button onClick={() => set('schema', 'id:id, product:name, price:price, category:string, inStock:boolean')} className="px-2 py-1 text-[10px] bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-500/20 rounded border border-green-500/20 transition-colors">E-Commerce</button>
+              <button onClick={() => set('schema', 'txId:id, account:id, amount:price, date:date, type:string')} className="px-2 py-1 text-[10px] bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 rounded border border-purple-500/20 transition-colors">Financial</button>
+            </div>
           </Field>
         )}
 
@@ -815,7 +838,7 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
               <input type="checkbox" className="sr-only"
                 checked={config.injectEdgeCases || false}
                 onChange={e => set('injectEdgeCases', e.target.checked)} />
-              <div className={cn('w-9 h-5 rounded-full transition-colors', config.injectEdgeCases ? 'bg-primary' : 'bg-white/10')} />
+              <div className={cn('w-9 h-5 rounded-full transition-colors', config.injectEdgeCases ? 'bg-primary' : 'bg-black/10 dark:bg-white/10')} />
               <div className={cn('absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm',
                 config.injectEdgeCases ? 'translate-x-4' : 'translate-x-0')} />
             </div>
@@ -828,11 +851,11 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
       </div>
 
       {/* Generate button */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-black/10 dark:border-white/10">
         <button
           onClick={onGenerate}
           disabled={loading}
-          className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 active:translate-y-0"
+          className="w-full bg-primary hover:bg-primary/90 text-foreground dark:text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 active:translate-y-0"
         >
           {loading ? (
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -851,7 +874,7 @@ function ConfigSidebar({ mode, config, setConfig, onGenerate, loading }: any) {
 function ValidationReport({ validation }: { validation: any }) {
   const { checks, summary } = validation;
   return (
-    <div className="bg-black/40 border border-white/10 rounded-xl p-4 shrink-0">
+    <div className="bg-white/70 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl p-4 shrink-0">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <Shield className="w-4 h-4 text-primary" />
@@ -904,14 +927,14 @@ function DataPreview({ data, mode }: { data: any; mode: Mode }) {
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-black/30 border border-white/10 rounded-xl">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white/60 dark:bg-black/30 border border-black/10 dark:border-white/10 rounded-xl">
       {/* Toolbar */}
-      <div className="flex items-center justify-between p-3 border-b border-white/10 shrink-0">
+      <div className="flex items-center justify-between p-3 border-b border-black/10 dark:border-white/10 shrink-0">
         <div className="flex space-x-1">
           {(['preview', 'raw'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={cn('px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                tab === t ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'
+                tab === t ? 'bg-black/10 dark:bg-white/10 text-foreground dark:text-white' : 'text-muted-foreground hover:text-foreground dark:text-white'
               )}>
               {t === 'preview' ? 'Preview' : 'Raw JSON'}
             </button>
@@ -928,7 +951,7 @@ function DataPreview({ data, mode }: { data: any; mode: Mode }) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-3">
+      <div id="preview-content-container" className="flex-1 overflow-auto p-3 bg-white/70 dark:bg-black/40">
         {tab === 'raw' ? (
           <pre className="font-mono text-xs text-green-400 whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
         ) : (
@@ -943,6 +966,32 @@ function PreviewContent({ data, mode, page, setPage, pageSize }: any) {
   if (mode === 'tabular' && Array.isArray(data)) {
     return <PaginatedTable data={data} page={page} setPage={setPage} pageSize={pageSize} />;
   }
+function RenderDocumentValue({ value }: { value: any }) {
+  if (Array.isArray(value)) {
+    return (
+      <ul className="list-disc list-outside pl-4 space-y-1 my-1">
+        {value.map((item, i) => (
+          <li key={i} className="text-gray-700">
+            <RenderDocumentValue value={item} />
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  if (typeof value === 'object' && value !== null) {
+    return (
+      <ul className="space-y-1 my-1">
+        {Object.entries(value).map(([k, v]) => (
+          <li key={k} className="flex flex-col sm:flex-row sm:space-x-2 pb-1">
+            <span className="font-semibold text-gray-600 sm:w-40 shrink-0">{k.replace(/([A-Z])/g, ' $1').trim().replace(/^./, str => str.toUpperCase())}:</span>
+            <span className="text-gray-800 flex-1"><RenderDocumentValue value={v} /></span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return <span>{String(value)}</span>;
+}
 
   if (mode === 'relational' && typeof data === 'object' && !Array.isArray(data)) {
     return (
@@ -952,7 +1001,7 @@ function PreviewContent({ data, mode, page, setPage, pageSize }: any) {
             <div className="flex items-center space-x-2 mb-2">
               <Database className="w-3.5 h-3.5 text-primary" />
               <h3 className="text-xs font-semibold text-primary">{tableName}</h3>
-              <span className="text-[10px] text-muted-foreground bg-white/5 px-1.5 py-0.5 rounded-full">{rows.length} rows</span>
+              <span className="text-[10px] text-muted-foreground bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded-full">{rows.length} rows</span>
             </div>
             <PaginatedTable data={rows} page={0} setPage={() => {}} pageSize={10} />
           </div>
@@ -969,18 +1018,29 @@ function PreviewContent({ data, mode, page, setPage, pageSize }: any) {
     return <BankStatementPreview data={data} />;
   }
 
-  // Fallback: key-value cards
+  // Fallback: generic document layout
   if (typeof data === 'object' && !Array.isArray(data)) {
     return (
-      <div className="space-y-3">
-        {Object.entries(data).map(([key, value]) => (
-          <div key={key} className="bg-white/5 rounded-lg p-3">
-            <div className="text-[10px] font-semibold text-primary uppercase tracking-wider mb-1">{key}</div>
-            <div className="text-xs text-muted-foreground">
-              {typeof value === 'object' ? <pre className="whitespace-pre-wrap font-mono">{JSON.stringify(value, null, 2)}</pre> : String(value)}
-            </div>
-          </div>
-        ))}
+      <div className="bg-white text-black rounded-lg p-8 text-sm max-w-3xl mx-auto shadow-xl border border-gray-200 w-full">
+        <div className="bg-amber-100 border border-amber-300 text-amber-900 text-[10px] font-bold tracking-widest uppercase text-center py-1 px-3 rounded mb-8">
+          SYNTHETIC DATA — FOR DEMONSTRATION ONLY
+        </div>
+        <h2 className="text-2xl font-bold text-gray-800 tracking-tight mb-6 uppercase border-b-2 border-gray-100 pb-4">
+          {data.title || data.documentType || 'Structured Document'}
+        </h2>
+        <div className="space-y-6">
+          {Object.entries(data).map(([key, value]) => {
+            if (key === 'title' || key === 'documentType') return null;
+            return (
+              <div key={key} className="break-inside-avoid">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{key.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                <div className="text-sm text-gray-800 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <RenderDocumentValue value={value} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
@@ -997,15 +1057,15 @@ function PaginatedTable({ data, page, setPage, pageSize }: any) {
 
   return (
     <div>
-      <div className="overflow-x-auto rounded-lg border border-white/10">
+      <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
         <table className="w-full text-xs text-left">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
             <tr>
               <th className="px-3 py-2 text-muted-foreground font-medium w-8">#</th>
               {headers.map(h => <th key={h} className="px-3 py-2 text-muted-foreground font-medium whitespace-nowrap">{h}</th>)}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-black/5 dark:divide-white/5">
             {pageData.map((row: any, i: number) => (
               <tr key={i} className="hover:bg-white/[0.02] transition-colors">
                 <td className="px-3 py-2 text-muted-foreground/40">{page * pageSize + i + 1}</td>
@@ -1026,9 +1086,9 @@ function PaginatedTable({ data, page, setPage, pageSize }: any) {
         <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
           <span>{data.length} rows total</span>
           <div className="flex items-center space-x-2">
-            <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="px-2 py-1 bg-white/5 rounded disabled:opacity-30 hover:bg-white/10">←</button>
+            <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="px-2 py-1 bg-black/5 dark:bg-white/5 rounded disabled:opacity-30 hover:bg-black/10 dark:bg-white/10">←</button>
             <span>Page {page + 1} of {totalPages}</span>
-            <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page >= totalPages - 1} className="px-2 py-1 bg-white/5 rounded disabled:opacity-30 hover:bg-white/10">→</button>
+            <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page >= totalPages - 1} className="px-2 py-1 bg-black/5 dark:bg-white/5 rounded disabled:opacity-30 hover:bg-black/10 dark:bg-white/10">→</button>
           </div>
         </div>
       )}
@@ -1098,47 +1158,65 @@ function InvoicePreview({ data }: { data: any }) {
 function BankStatementPreview({ data }: { data: any }) {
   const sym = data.currency === 'PKR' ? 'Rs.' : '$';
   return (
-    <div className="space-y-4">
-      <div className="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold tracking-widest uppercase text-center py-1.5 px-3 rounded-lg">
+    <div className="bg-white text-black rounded-lg p-6 text-sm max-w-3xl mx-auto shadow-xl border border-gray-200">
+      <div className="bg-amber-100 border border-amber-300 text-amber-900 text-[10px] font-bold tracking-widest uppercase text-center py-1 px-3 rounded mb-6">
         SYNTHETIC DATA — FOR DEMONSTRATION ONLY
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 tracking-tight">BANK STATEMENT</h2>
+          <div className="text-gray-500 text-xs mt-1">Account: {data.accountNumber || 'xxxx-xxxx-xxxx-1234'}</div>
+          <div className="text-gray-500 text-xs">Holder: {data.accountHolder || 'John Doe'}</div>
+        </div>
+        <div className="text-right">
+          <div className="text-sm font-semibold text-gray-700">Statement Period</div>
+          <div className="text-xs text-gray-500 mt-1">
+            {typeof data.statementPeriod === 'object' && data.statementPeriod !== null
+              ? `${data.statementPeriod.from || ''} - ${data.statementPeriod.to || ''}`
+              : data.statementPeriod || 'Current Month'}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: 'Opening Balance', value: `${sym}${data.summary?.openingBalance?.toLocaleString()}` },
-          { label: 'Total Debits', value: `${sym}${data.summary?.totalDebits?.toLocaleString()}`, color: 'text-red-400' },
-          { label: 'Closing Balance', value: `${sym}${data.summary?.closingBalance?.toLocaleString()}`, color: 'text-green-400' },
+          { label: 'Opening Balance', value: `${sym}${data.summary?.openingBalance?.toLocaleString()}`, color: 'text-gray-700' },
+          { label: 'Total Debits', value: `${sym}${data.summary?.totalDebits?.toLocaleString()}`, color: 'text-red-600' },
+          { label: 'Closing Balance', value: `${sym}${data.summary?.closingBalance?.toLocaleString()}`, color: 'text-green-600' },
         ].map(s => (
-          <div key={s.label} className="bg-white/5 rounded-lg p-3">
-            <div className="text-[10px] text-muted-foreground mb-1">{s.label}</div>
-            <div className={cn('text-sm font-bold', s.color)}>{s.value}</div>
+          <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-lg p-4 text-center">
+            <div className="text-xs text-gray-500 mb-1 uppercase tracking-wider">{s.label}</div>
+            <div className={cn('text-lg font-bold', s.color)}>{s.value}</div>
           </div>
         ))}
       </div>
-      <div className="overflow-x-auto rounded-lg border border-white/10">
+
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
         <table className="w-full text-xs">
-          <thead className="bg-white/5 border-b border-white/10">
+          <thead className="bg-gray-100 border-b border-gray-200">
             <tr>
-              {['Date', 'Description', 'Debit', 'Credit', 'Balance', 'Ref'].map(h => (
-                <th key={h} className="px-3 py-2 text-left text-muted-foreground font-medium">{h}</th>
+              {['Date', 'Description', 'Ref', 'Debit', 'Credit', 'Balance'].map(h => (
+                <th key={h} className={cn('px-4 py-3 text-gray-600 font-semibold', h === 'Description' ? 'text-left' : h === 'Date' || h === 'Ref' ? 'text-left' : 'text-right')}>{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-100 bg-white">
             {data.transactions?.slice(0, 30).map((tx: any, i: number) => (
-              <tr key={i} className="hover:bg-white/[0.02]">
-                <td className="px-3 py-2 whitespace-nowrap">{tx.date}</td>
-                <td className="px-3 py-2 max-w-[160px] truncate">{tx.description}</td>
-                <td className="px-3 py-2 text-red-400">{tx.debit != null ? `${sym}${tx.debit.toLocaleString()}` : '—'}</td>
-                <td className="px-3 py-2 text-green-400">{tx.credit != null ? `${sym}${tx.credit.toLocaleString()}` : '—'}</td>
-                <td className="px-3 py-2 font-medium">{sym}{tx.balance.toLocaleString()}</td>
-                <td className="px-3 py-2 text-muted-foreground/60 font-mono text-[10px]">{tx.reference}</td>
+              <tr key={i} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-600">{tx.date}</td>
+                <td className="px-4 py-3 max-w-[200px] truncate font-medium text-gray-800">{tx.description}</td>
+                <td className="px-4 py-3 text-gray-400 font-mono text-[10px]">{tx.reference}</td>
+                <td className="px-4 py-3 text-right text-red-600">{tx.debit != null ? `${sym}${tx.debit.toLocaleString()}` : ''}</td>
+                <td className="px-4 py-3 text-right text-green-600">{tx.credit != null ? `${sym}${tx.credit.toLocaleString()}` : ''}</td>
+                <td className="px-4 py-3 text-right font-semibold text-gray-700">{sym}{tx.balance.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {data.transactions?.length > 30 && (
-        <p className="text-xs text-muted-foreground text-center">Showing first 30 of {data.transactions.length} transactions. Export JSON for full data.</p>
+        <p className="text-xs text-gray-400 text-center mt-4">Showing first 30 of {data.transactions.length} transactions. Export PDF/JSON for full data.</p>
       )}
     </div>
   );
@@ -1166,7 +1244,7 @@ function ExportBtn({ label, onClick, highlight }: { label: string; onClick: () =
         'flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs transition-colors',
         highlight
           ? 'bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary'
-          : 'bg-white/5 hover:bg-white/10 border border-white/10'
+          : 'bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10'
       )}
     >
       <Download className="w-3 h-3" />
@@ -1180,7 +1258,7 @@ function ErrorBanner({ message }: { message: string }) {
     <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-start space-x-3">
       <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
       <div>
-        <div className="text-sm font-semibold text-white mb-1">Generation Failed</div>
+        <div className="text-sm font-semibold text-foreground dark:text-white mb-1">Generation Failed</div>
         <div className="text-xs text-red-400/90 leading-relaxed">{message}</div>
         <div className="text-xs text-muted-foreground mt-2">Tip: Reduce row count, simplify schema, or try again in a moment.</div>
       </div>
@@ -1196,7 +1274,7 @@ function LoadingPane() {
         <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin absolute inset-0" />
       </div>
       <div className="text-center space-y-1">
-        <div className="text-base font-semibold text-white">Generating...</div>
+        <div className="text-base font-semibold text-foreground dark:text-white">Generating...</div>
         <div className="text-xs text-muted-foreground">Deterministic engine running</div>
       </div>
     </div>

@@ -204,6 +204,7 @@ Locale: ${locale}
 Edge Cases: ${injectEdgeCases ? 'Include edge cases such as extra fees, specific compliance clauses, or irregular terms.' : 'Standard realistic terms.'}
 
 Rules:
+0. CRITICAL: All text values (descriptions, notes, names, items, text) MUST be translated to and written entirely in the natural language/script corresponding to the Locale "${locale}". Do NOT use English for text values if the locale is non-English (e.g. write in Urdu/Arabic script if Urdu is selected).
 1. Output ONLY valid JSON matching application/json grammar.
 2. Ensure all arithmetic (subtotal, taxes, amounts, totals) is 100% mathematically correct.
 3. Keep strings concise and realistic. Avoid endless nested structures.

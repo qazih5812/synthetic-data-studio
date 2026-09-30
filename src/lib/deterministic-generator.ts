@@ -68,7 +68,7 @@ export interface LocaleData {
   streets: string[];
 }
 
-const LOCALE_DATA: Record<'en-US' | 'pk', LocaleData> = {
+const LOCALE_DATA: Record<'en-US' | 'pk' | 'ur', LocaleData> = {
   'en-US': {
     firstNames: ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Barbara','David','Elizabeth','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Christopher','Lisa','Daniel','Nancy','Matthew','Betty','Anthony','Margaret','Mark','Sandra','Donald','Ashley','Steven','Dorothy','Paul','Kimberly','Andrew','Emily','Kenneth','Donna'],
     lastNames: ['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris','Sanchez','Clark','Ramirez','Lewis','Robinson','Walker','Young','Allen','King','Wright','Scott','Torres','Nguyen','Hill','Flores'],
@@ -93,12 +93,25 @@ const LOCALE_DATA: Record<'en-US' | 'pk', LocaleData> = {
     domains: ['gmail.com','yahoo.com','hotmail.com','company.com.pk','gmail.pk'],
     streets: ['Model Town','DHA Phase','Gulshan-e-Iqbal','Blue Area','F-7','G-10','Clifton Block','Garden Town','Johar Town','Cantt Area'],
   },
+  'ur': {
+    firstNames: ['محمد', 'احمد', 'علی', 'عثمان', 'حسن', 'ابراہیم', 'عمر', 'بلال', 'طارق', 'آصف', 'عمران', 'کامران', 'زبیر', 'ساجد', 'عدنان', 'فاطمہ', 'عائشہ', 'زینب', 'ثناء', 'حرا', 'نادیہ', 'رابعہ', 'آمنہ', 'سارہ', 'مہوش', 'عظمیٰ', 'صوبیہ', 'رخسانہ', 'نسرین', 'پروین'],
+    lastNames: ['خان', 'احمد', 'ملک', 'شیخ', 'چوہدری', 'بٹ', 'مرزا', 'حسین', 'قریشی', 'صدیقی', 'ہاشمی', 'عباسی', 'راجپوت', 'رانا', 'چیمہ', 'بیگ', 'انصاری', 'فاروقی', 'زیدی'],
+    cities: ['کراچی', 'لاہور', 'اسلام آباد', 'راولپنڈی', 'فیصل آباد', 'ملتان', 'پشاور', 'کوئٹہ', 'گوجرانوالہ', 'سیالکوٹ', 'حیدرآباد', 'بہاولپور', 'سرگودھا', 'سکھر', 'لاڑکانہ'],
+    countries: ['پاکستان'],
+    currency: 'PKR',
+    currencySymbol: 'Rs.',
+    phoneFormat: () => `+92-${Math.floor(300+Math.random()*100)}-${Math.floor(1000000+Math.random()*9000000)}`,
+    companies: ['ٹیک پی کے لمیٹڈ', 'کراچی ٹریڈرز', 'پنجاب انٹرپرائزز', 'سندھ سلوشنز', 'پاکستان ڈیجیٹل', 'راوی ٹیک', 'انڈس سسٹمز', 'مارگلہ آئی ٹی', 'الرحمن گروپ', 'پاک وینچرز'],
+    domains: ['gmail.com', 'yahoo.com', 'hotmail.com', 'company.com.pk', 'gmail.pk'],
+    streets: ['ماڈل ٹاؤن', 'ڈی ایچ اے فیز', 'گلشن اقبال', 'بلیو ایریا', 'ایف-7', 'جی-10', 'کلفٹن بلاک', 'گارڈن ٹاؤن', 'جوہر ٹاؤن', 'کینٹ ایریا'],
+  },
 };
 
 type LocaleKey = keyof typeof LOCALE_DATA;
 
 function getLocaleKey(locale: string): LocaleKey {
-  if (locale === 'pk' || locale.toLowerCase().includes('pakistan') || locale.toLowerCase() === 'ur') return 'pk';
+  if (locale === 'ur') return 'ur';
+  if (locale === 'pk' || locale.toLowerCase().includes('pakistan')) return 'pk';
   return 'en-US';
 }
 
@@ -605,4 +618,67 @@ function evaluateConstraint(constraint: string, row: Record<string, any>): boole
   } catch {
     return true; // Skip unparseable constraints
   }
+}
+
+export function validateDocumentData(
+  data: any,
+  mode: string
+): ValidationResult {
+  const checks: ValidationCheck[] = [];
+
+  checks.push({
+    name: 'Document Structure',
+    status: data && typeof data === 'object' ? 'PASS' : 'FAIL',
+    detail: data && typeof data === 'object' ? 'Valid JSON object' : 'Invalid document format'
+  });
+
+  if (mode === 'invoice') {
+    const items = data.lineItems || [];
+    const subtotal = items.reduce((acc: number, item: any) => acc + (item.total || (item.quantity * item.unitPrice) || 0), 0);
+    const tax = data.taxAmount || 0;
+    const total = data.totalAmount || 0;
+    
+    const mathCheck = Math.abs(total - (subtotal + tax)) < 0.1;
+    checks.push({
+      name: 'Mathematical Consistency (Invoice)',
+      status: mathCheck ? 'PASS' : 'FAIL',
+      detail: mathCheck ? 'Line items and tax sum correctly to total' : `Expected ${subtotal + tax}, got ${total}`,
+      metric: 'Totals match'
+    });
+  } else if (mode === 'bank-statement') {
+    const txs = data.transactions || [];
+    const opening = data.summary?.openingBalance || 0;
+    const closing = data.summary?.closingBalance || 0;
+    const computedClosing = txs.reduce((acc: number, tx: any) => acc + (tx.credit || 0) - (tx.debit || 0), opening);
+    
+    const mathCheck = Math.abs(closing - computedClosing) < 0.1;
+    checks.push({
+      name: 'Mathematical Consistency (Bank Statement)',
+      status: mathCheck ? 'PASS' : 'FAIL',
+      detail: mathCheck ? 'Transactions sum correctly to closing balance' : `Expected ${computedClosing}, got ${closing}`,
+      metric: 'Balance matches'
+    });
+  } else {
+    // General document check
+    const fieldsCount = Object.keys(data).length;
+    checks.push({
+      name: 'Schema Completeness',
+      status: fieldsCount > 0 ? 'PASS' : 'WARN',
+      detail: `${fieldsCount} root fields generated`,
+      metric: fieldsCount
+    });
+  }
+
+  const passed = checks.filter(c => c.status === 'PASS').length;
+  const failed = checks.filter(c => c.status === 'FAIL').length;
+  const warnings = checks.filter(c => c.status === 'WARN').length;
+  const overallScore = checks.length > 0
+    ? Math.round(((passed + warnings * 0.5) / checks.length) * 100)
+    : 0;
+
+  return {
+    passed: failed === 0,
+    checks,
+    summary: { total: checks.length, passed, failed, warnings, nullRate: 0, uniquenessScore: 100, overallScore },
+  };
 }

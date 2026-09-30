@@ -177,20 +177,45 @@ export const exportToPDF = async (data: any, mode: Mode) => {
     doc.setDrawColor(226, 232, 240);
     doc.line(15, 32, 195, 32);
 
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(9);
+    const element = document.getElementById('preview-content-container');
 
-    const formattedText = JSON.stringify(data, null, 2);
-    const lines = doc.splitTextToSize(formattedText, 180);
+    if (element && mode !== 'tabular' && mode !== 'relational') {
+      const { default: html2canvas } = await import('html2canvas');
+      // Save original style to restore later
+      const originalMaxHeight = element.style.maxHeight;
+      const originalOverflow = element.style.overflow;
+      
+      // Temporarily modify styles to capture full content
+      element.style.maxHeight = 'none';
+      element.style.overflow = 'visible';
 
-    let y = 40;
-    for (let i = 0; i < lines.length; i++) {
-      if (y > 280) {
-        doc.addPage();
-        y = 15;
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
+      
+      // Restore original styles
+      element.style.maxHeight = originalMaxHeight;
+      element.style.overflow = originalOverflow;
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 180;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      doc.addImage(imgData, 'PNG', 15, 40, imgWidth, imgHeight);
+    } else {
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(9);
+
+      const formattedText = JSON.stringify(data, null, 2);
+      const lines = doc.splitTextToSize(formattedText, 180);
+
+      let y = 40;
+      for (let i = 0; i < lines.length; i++) {
+        if (y > 280) {
+          doc.addPage();
+          y = 15;
+        }
+        doc.text(lines[i], 15, y);
+        y += 4.5;
       }
-      doc.text(lines[i], 15, y);
-      y += 4.5;
     }
 
     doc.save(`${mode}_export.pdf`);
