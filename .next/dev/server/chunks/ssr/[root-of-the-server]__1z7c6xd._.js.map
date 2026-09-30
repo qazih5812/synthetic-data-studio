@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 46, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/GALLANT%20LAPTOPS/OneDrive/Desktop/DATA%20folder/codes/hackdata%20v2/hackdatav2/src/components/ThemeProvider.tsx"],"sourcesContent":["'use client';\n\nimport * as React from 'react';\nimport { ThemeProvider as NextThemesProvider } from 'next-themes';\n\nexport function ThemeProvider({ children, ...props }: any) {\n  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;\n}\n"],"names":["ThemeProvider","children","props"],"mappings":";;;;;AAGA;AAHA;;;AAKO,SAASA,cAAc,EAAEC,QAAQ,EAAE,GAAGC,OAAY;IACvD,qBAAO,8OAAC,iKAAkB;QAAE,GAAGA,KAAK;kBAAGD;;;;;;AACzC"}}]
-}
